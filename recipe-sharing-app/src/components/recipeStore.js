@@ -1,14 +1,11 @@
 import { create } from 'zustand';
 
 export const useRecipeStore = create((set, get) => ({
-  // Initial recipe list
   recipes: [],
-
-  // Search term for filtering
   searchTerm: '',
-
-  // Filtered recipes (calculated when searchTerm changes)
   filteredRecipes: [],
+  favorites: [],
+  recommendations: [],
 
   // Add a new recipe
   addRecipe: (newRecipe) =>
@@ -31,6 +28,7 @@ export const useRecipeStore = create((set, get) => ({
         filteredRecipes: updatedRecipes.filter((recipe) =>
           recipe.title.toLowerCase().includes(get().searchTerm.toLowerCase())
         ),
+        favorites: state.favorites.filter((favId) => favId !== id),
       };
     }),
 
@@ -48,26 +46,38 @@ export const useRecipeStore = create((set, get) => ({
       };
     }),
 
-  // Set all recipes (e.g., on initialization)
-  setRecipes: (recipes) =>
-    set(() => ({
-      recipes,
-      filteredRecipes: recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(get().searchTerm.toLowerCase())
-      ),
-    })),
-
-  // Set search term and filter
+  // Search
   setSearchTerm: (term) => {
     set({ searchTerm: term });
     get().filterRecipes();
   },
 
-  // Filter recipes based on current searchTerm
   filterRecipes: () =>
     set((state) => ({
       filteredRecipes: state.recipes.filter((recipe) =>
         recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
       ),
     })),
+
+  // Favorites
+  addFavorite: (recipeId) =>
+    set((state) => ({
+      favorites: state.favorites.includes(recipeId)
+        ? state.favorites
+        : [...state.favorites, recipeId],
+    })),
+
+  removeFavorite: (recipeId) =>
+    set((state) => ({
+      favorites: state.favorites.filter((id) => id !== recipeId),
+    })),
+
+  // Recommendations (mock logic)
+  generateRecommendations: () =>
+    set((state) => {
+      const recommended = state.recipes.filter(
+        (recipe) => !state.favorites.includes(recipe.id) && Math.random() > 0.5
+      );
+      return { recommendations: recommended };
+    }),
 }));
