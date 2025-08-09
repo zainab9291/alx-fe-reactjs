@@ -1,38 +1,23 @@
-import { useState } from 'react'
-import SearchBar from './components/SearchBar'
-import UserCard from './components/UserCard'
-import { getUserData } from './services/githubAPI'
+import { useState } from 'react';
+import Search from './components/Search';
 
 export default function App() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-
-  const handleSearch = async (username) => {
-    setLoading(true)
-    setError(null)
-    setUser(null)
-    try {
-      const data = await getUserData(username)
-      if (!data) {
-        setError('User not found or rate-limited')
-      } else {
-        setUser(data)
-      }
-    } catch (err) {
-      setError('Error fetching data')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [user, setUser] = useState(null);
 
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', padding: '0 16px' }}>
+    <div style={{ maxWidth: '800px', margin: '40px auto', padding: '0 16px' }}>
       <h1 style={{ textAlign: 'center' }}>GitHub User Search</h1>
-      <SearchBar onSearch={handleSearch} />
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {user && <UserCard user={user} />}
+      <Search onUserFetched={setUser} />
+
+      {user && (
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <img src={user.avatar_url} alt={user.login} width={120} style={{ borderRadius: '50%' }} />
+          <h2>{user.name || user.login}</h2>
+          <a href={user.html_url} target="_blank" rel="noreferrer">
+            View Profile
+          </a>
+        </div>
+      )}
     </div>
-  )
+  );
 }
