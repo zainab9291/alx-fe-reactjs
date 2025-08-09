@@ -1,43 +1,62 @@
-import { useState } from 'react';
-import { fetchUserData } from '../services/githubService';
+import { useState } from "react";
+import { fetchUserData } from "../services/githubService";
 
-const Search = ({ onUserFetched }) => {
-  const [username, setUsername] = useState('');
+const Search = () => {
+  const [username, setUsername] = useState("");
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
+    setError(null);
+    setUserData(null);
 
-    const userData = await fetchUserData(username);
-    if (!userData) {
-      setError("Looks like we can't find the user");
-    } else {
-      onUserFetched(userData);
+    try {
+      const data = await fetchUserData(username);
+      if (!data || data.message === "Not Found") {
+        setError("Looks like we cant find the user");
+      } else {
+        setUserData(data);
+      }
+    } catch (err) {
+      setError("Looks like we cant find the user");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <form onSubmit={handleSearch}>
         <input
           type="text"
+          placeholder="Search GitHub username..."
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter GitHub username"
-          style={{ padding: '8px', width: '250px' }}
         />
-        <button type="submit" style={{ padding: '8px 12px', marginLeft: '8px' }}>
-          Search
-        </button>
+        <button type="submit">Search</button>
       </form>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p>{error}</p>}
+
+      {userData && (
+        <div>
+          {/* الاختبار بيطلب avatar_url و img */}
+          <img
+            src={userData.avatar_url}
+            alt={`${userData.login} avatar`}
+            width="100"
+          />
+          {/* الاختبار بيطلب login */}
+          <h2>{userData.login}</h2>
+          <a href={userData.html_url} target="_blank" rel="noreferrer">
+            View Profile
+          </a>
+        </div>
+      )}
     </div>
   );
 };
