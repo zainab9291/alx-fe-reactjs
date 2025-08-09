@@ -1,62 +1,93 @@
 import { useState } from "react";
-import { fetchUserData } from "../services/githubService";
+import { fetchAdvancedUsers } from "../services/githubService";
 
 const Search = () => {
   const [username, setUsername] = useState("");
-  const [userData, setUserData] = useState(null);
+  const [location, setLocation] = useState("");
+  const [minRepos, setMinRepos] = useState("");
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setUserData(null);
+    setError("");
+    setResults([]);
 
-    try {
-      const data = await fetchUserData(username);
-      if (!data || data.message === "Not Found") {
-        setError("Looks like we cant find the user");
-      } else {
-        setUserData(data);
-      }
-    } catch (err) {
+    const data = await fetchAdvancedUsers(username, location, minRepos);
+    if (data.length === 0) {
       setError("Looks like we cant find the user");
-    } finally {
-      setLoading(false);
+    } else {
+      setResults(data);
     }
+    setLoading(false);
   };
 
   return (
-    <div>
-      <form onSubmit={handleSearch}>
+    <div className="max-w-3xl mx-auto p-4">
+      <form
+        onSubmit={handleSearch}
+        className="grid gap-4 sm:grid-cols-3 mb-6 bg-white shadow-md rounded-lg p-4"
+      >
         <input
           type="text"
-          placeholder="Search GitHub username..."
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="border p-2 rounded"
         />
-        <button type="submit">Search</button>
+        <input
+          type="text"
+          placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="border p-2 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Min Repos"
+          value={minRepos}
+          onChange={(e) => setMinRepos(e.target.value)}
+          className="border p-2 rounded"
+        />
+        <button
+          type="submit"
+          className="sm:col-span-3 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
+          Search
+        </button>
       </form>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
 
-      {userData && (
-        <div>
-          {/* الاختبار بيطلب avatar_url و img */}
-          <img
-            src={userData.avatar_url}
-            alt={`${userData.login} avatar`}
-            width="100"
-          />
-          {/* الاختبار بيطلب login */}
-          <h2>{userData.login}</h2>
-          <a href={userData.html_url} target="_blank" rel="noreferrer">
-            View Profile
-          </a>
-        </div>
-      )}
+      <div className="grid gap-4">
+        {results.map((user) => (
+          <div
+            key={user.id}
+            className="flex items-center gap-4 bg-gray-100 p-4 rounded shadow"
+          >
+            <img
+              src={user.avatar_url}
+              alt={`${user.login} avatar`}
+              className="w-16 h-16 rounded-full"
+            />
+            <div>
+              <h2 className="text-lg font-bold">{user.login}</h2>
+              <a
+                href={user.html_url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline"
+              >
+                View Profile
+              </a>
+              {/* GitHub Search API ما بيرجعش location وعدد الريبو مباشرة في البحث، محتاجين call تاني لو عايزين التفاصيل */}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
