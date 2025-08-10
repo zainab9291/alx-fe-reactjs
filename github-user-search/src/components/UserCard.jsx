@@ -1,20 +1,27 @@
-export default function UserCard({ user }) {
+const UserCard = ({ user }) => {
   return (
-    <div style={{ border: '1px solid #ddd', padding: 16, borderRadius: 8, display: 'flex', gap: 16 }}>
-      <img src={user.avatar_url} alt="avatar" width={120} height={120} style={{ borderRadius: 8 }} />
-      <div>
-        <h2 style={{ margin: 0 }}>{user.name || user.login}</h2>
-        <p style={{ margin: '4px 0' }}><strong>@{user.login}</strong></p>
-        {user.bio && <p>{user.bio}</p>}
-        <p style={{ margin: 0 }}>
-          {user.location && <span>📍 {user.location} </span>}
-          <span> • Repos: {user.public_repos}</span>
-          <span> • Followers: {user.followers}</span>
-        </p>
-        <p style={{ marginTop: 8 }}>
-          <a href={user.html_url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
-        </p>
+    <div className="max-w-lg mx-auto mt-6 bg-gray-50 p-4 rounded-lg shadow">
+      <div className="flex items-center gap-4">
+        <img
+          src={user.avatar_url}
+          alt={user.login}
+          className="w-20 h-20 rounded-full border"
+        />
+        <div>
+          <h2 className="text-xl font-bold">{user.login}</h2>
+          {user.name && <p className="text-gray-700">{user.name}</p>}
+          <a
+            href={user.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            View Profile
+          </a>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default UserCard;
