@@ -2,66 +2,86 @@ import { useState } from "react";
 import { fetchUserData } from "../services/githubService";
 
 const Search = () => {
-  const [query, setQuery] = useState("");
+  const [username, setUsername] = useState("");
+  const [location, setLocation] = useState("");
+  const [minRepos, setMinRepos] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setError("");
+    setUsers([]);
 
-    try {
-      const results = await fetchUserData(query);
-      if (results.length === 0) {
-        setError("Looks like we cant find the user");
-      }
-      setUsers(results);
-    } catch {
+    const data = await fetchUserData(username, location, minRepos);
+
+    if (!data || data.length === 0) {
       setError("Looks like we cant find the user");
-      setUsers([]);
-    } finally {
-      setLoading(false);
+    } else {
+      setUsers(data);
     }
+    setLoading(false);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-lg">
-      <form onSubmit={handleSearch} className="flex gap-2 mb-4">
+    <div className="max-w-2xl mx-auto p-4">
+      <form
+        onSubmit={handleSearch}
+        className="flex flex-col gap-3 bg-white p-4 rounded shadow"
+      >
         <input
           type="text"
-          placeholder="Search GitHub users..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Enter username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="border p-2 rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter location (optional)"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="border p-2 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Min repos (optional)"
+          value={minRepos}
+          onChange={(e) => setMinRepos(e.target.value)}
+          className="border p-2 rounded"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+          className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
         >
           Search
         </button>
       </form>
 
-      {loading && <p className="text-gray-500">Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+      {loading && <p className="mt-4">Loading...</p>}
+      {error && <p className="mt-4 text-red-500">{error}</p>}
 
-      <div className="grid gap-4">
+      <div className="mt-4 grid gap-4">
         {users.map((user) => (
-          <div key={user.id} className="flex items-center gap-4 p-3 border rounded-lg shadow-sm">
+          <div
+            key={user.id}
+            className="flex items-center gap-4 p-4 border rounded bg-gray-50"
+          >
             <img
               src={user.avatar_url}
               alt={user.login}
-              className="w-16 h-16 rounded-full border"
+              className="w-16 h-16 rounded-full"
             />
             <div>
-              <h2 className="text-lg font-bold">{user.login}</h2>
+              <p className="font-bold">{user.login}</p>
               <a
                 href={user.html_url}
                 target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
+                rel="noreferrer"
+                className="text-blue-500 underline"
               >
                 View Profile
               </a>
