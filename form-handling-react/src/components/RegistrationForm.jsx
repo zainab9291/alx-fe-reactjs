@@ -1,79 +1,74 @@
-// src/components/RegistrationForm.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 
-function RegistrationForm() {
+const RegistrationForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});   // ✅ error state
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newErrors = {};
+    let formErrors = {};
 
     if (!username) {
-      newErrors.username = "Username is required";
+      formErrors.username = "Username is required";
     }
-    if (!email) {                               // ✅ checker هيلاقي if (!email)
-      newErrors.email = "Email is required";
+    if (!email) {
+      formErrors.email = "Email is required";
     }
-    if (!password) {                            // ✅ checker هيلاقي if (!password)
-      newErrors.password = "Password is required";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);                     // ✅ checker هيلاقي setErrors
-      return;
+    if (!password) {
+      formErrors.password = "Password is required";
     }
 
-    // mock API
-    console.log("User registered:", { username, email, password });
-    alert("User registered successfully!");
+    setErrors(formErrors);
 
-    // clear
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setErrors({});
+    if (Object.keys(formErrors).length === 0) {
+      console.log("Form submitted:", { username, email, password });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4 max-w-md mx-auto">
-      <h2 className="text-xl font-bold">Register</h2>
+    <form onSubmit={handleSubmit} className="p-4 border rounded w-96 mx-auto mt-10">
+      <h2 className="text-xl mb-4">Controlled Registration Form</h2>
 
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="border p-2 rounded"
-      />
-      {errors.username && <p className="text-red-500">{errors.username}</p>}
+      <div>
+        <label>Username:</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="border p-2 w-full"
+        />
+        {errors.username && <p className="text-red-500">{errors.username}</p>}
+      </div>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 rounded"
-      />
-      {errors.email && <p className="text-red-500">{errors.email}</p>}
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="border p-2 w-full"
+        />
+        {errors.email && <p className="text-red-500">{errors.email}</p>}
+      </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 rounded"
-      />
-      {errors.password && <p className="text-red-500">{errors.password}</p>}
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-2 w-full"
+        />
+        {errors.password && <p className="text-red-500">{errors.password}</p>}
+      </div>
 
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
         Register
       </button>
     </form>
   );
-}
+};
 
 export default RegistrationForm;
