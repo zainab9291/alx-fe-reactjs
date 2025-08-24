@@ -2,16 +2,19 @@
   {
     "id": 1,
     "title": "Pasta",
-    "description": "Delicious homemade pasta with tomato sauce"
+    "summary": "A quick and tasty pasta dish.",
+    "image": "https://source.unsplash.com/400x300/?pasta"
   },
   {
     "id": 2,
     "title": "Salad",
-    "description": "Fresh green salad with olive oil"
+    "summary": "Fresh and healthy green salad.",
+    "image": "https://source.unsplash.com/400x300/?salad"
   },
   {
     "id": 3,
     "title": "Soup",
-    "description": "Warm vegetable soup for cold days"
+    "summary": "Warm vegetable soup for cold days.",
+    "image": "https://source.unsplash.com/400x300/?soup"
   }
 ]
