@@ -13,7 +13,13 @@ const fetchPosts = async () => {
 const PostsComponent = () => {
   const { data, isLoading, isError, error, refetch } = useQuery(
     "posts",
-    fetchPosts
+    fetchPosts,
+    {
+      cacheTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 30, // 30 seconds
+      refetchOnWindowFocus: false, // ما يعيدش الفيتش لما نرجع للنافذة
+      keepPreviousData: true, // يسيب البيانات القديمة لحد ما الجديدة توصل
+    }
   );
 
   if (isLoading) {
