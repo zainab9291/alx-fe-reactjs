@@ -1,25 +1,30 @@
-import React from "react";
-import recipes from "../data.json"; // استيراد البيانات
+import React, { useState, useEffect } from "react";
+import data from "../data.json";
 
 function HomePage() {
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    // هنا بنجيب البيانات من data.json
+    setRecipes(data);
+  }, []);
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Recipe List</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {recipes.map((recipe) => (   // استخدام map
+      <h1 className="text-2xl font-bold mb-4">Recipe List</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {recipes.map((recipe) => (
           <div
             key={recipe.id}
-            className="border rounded-xl shadow bg-white hover:shadow-md overflow-hidden"
+            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
           >
             <img
               src={recipe.image}
               alt={recipe.title}
-              className="w-full h-48 object-cover"
+              className="w-full h-40 object-cover rounded-md mb-3"
             />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{recipe.title}</h2>
-              <p className="text-gray-600">{recipe.summary}</p>
-            </div>
+            <h2 className="text-lg font-semibold">{recipe.title}</h2>
+            <p className="text-gray-600">{recipe.summary}</p>
           </div>
         ))}
       </div>
