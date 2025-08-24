@@ -30,10 +30,8 @@
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "vite": "^4.4.5"
-  },
-  "jest": {
-  "testEnvironment": "jsdom"
-}
+    
+  }
   
   
 }
