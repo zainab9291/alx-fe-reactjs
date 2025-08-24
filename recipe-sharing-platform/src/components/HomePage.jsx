@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import data from "../data.json";
+import recipesData from "../data.json";
 
 function HomePage() {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    setRecipes(data);
+    setRecipes(recipesData);
   }, []);
 
   return (
-    <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Recipe App</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Recipe App</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
