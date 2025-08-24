@@ -1,66 +1,62 @@
+// src/components/RegistrationForm.jsx
 import { useState } from "react";
 
-export default function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-
-  const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+function RegistrationForm() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // basic validation
-    if (!formData.username || !formData.email || !formData.password) {
-      setError("All fields are required!");
+    if (!username || !email || !password) {
+      alert("All fields are required!");
       return;
     }
 
-    setError("");
-    console.log("Form submitted:", formData);
+    // mock API simulation
+    console.log("User registered:", { username, email, password });
+    alert("User registered successfully!");
 
-    // هنا تقدر تعملي POST لموك API
+    // clear fields after submit
+    setUsername("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md mx-auto mt-10">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4 max-w-md mx-auto">
+      <h2 className="text-xl font-bold">Register</h2>
+
       <input
         type="text"
-        name="username"
         placeholder="Username"
-        value={formData.username}
-        onChange={handleChange}
+        value={username}                 {/* ✅ لازم يكون هنا */}
+        onChange={(e) => setUsername(e.target.value)}
         className="border p-2 rounded"
       />
+
       <input
         type="email"
-        name="email"
         placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
+        value={email}                    {/* ✅ لازم يكون هنا */}
+        onChange={(e) => setEmail(e.target.value)}
         className="border p-2 rounded"
       />
+
       <input
         type="password"
-        name="password"
         placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
+        value={password}                 {/* ✅ لازم يكون هنا */}
+        onChange={(e) => setPassword(e.target.value)}
         className="border p-2 rounded"
       />
-      {error && <p className="text-red-500">{error}</p>}
+
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">
         Register
       </button>
     </form>
   );
 }
+
+export default RegistrationForm;
