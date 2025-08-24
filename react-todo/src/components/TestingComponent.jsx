@@ -1,5 +1,7 @@
 import React from "react";
 
-export default function TestingComponent({ text }) {
-  return <div data-testid="testing-component">{text}</div>;
+function TestingComponent({ text }) {
+  return <div>{text}</div>;
 }
+
+export default TestingComponent;

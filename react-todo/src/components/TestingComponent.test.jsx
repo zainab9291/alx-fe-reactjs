@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import TestingComponent from "./TestingComponent";
 
 test("renders TestingComponent with text", () => {
-  render(<TestingComponent text="Hello World" />);
-  const element = screen.getByTestId("testing-component");
-  expect(element).toHaveTextContent("Hello World");
+  render(<TestingComponent text="Hello Testing" />);
+  const element = screen.getByText("Hello Testing");
+  expect(element).toBeInTheDocument();
 });
